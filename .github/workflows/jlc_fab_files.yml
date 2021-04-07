@@ -32,8 +32,8 @@ jobs:
         with:
           config: pcb/jlcpcb_fab_files.kibot.yaml
           dir: 'pcb'
-          board: 'pcb/*.kicad_pcb'
-          schema: 'pcb/*.sch'
+          board: 'pcb/JLC_DemoBoard.kicad_pcb'
+          schema: 'pcb/JLC_DemoBoard.sch'
       - uses: papeloto/action-zip@v1
         name: Zip gerbers
         with:
