@@ -22,3 +22,6 @@ fp-info-cache
 # Autorouter files (exported from Pcbnew)
 *.dsn
 *.ses
+
+# MacOS index files
+.DS_Store
