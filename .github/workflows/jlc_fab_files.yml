@@ -28,7 +28,7 @@ jobs:
     needs: once
     steps:
       - uses: actions/checkout@v2
-      - uses: nerdyscout/kicad-exports@v2.3
+      - uses: nerdyscout/kicad-exports@v2.2
         with:
           config: pcb/jlcpcb_fab_files.kibot.yaml
           dir: 'pcb'
