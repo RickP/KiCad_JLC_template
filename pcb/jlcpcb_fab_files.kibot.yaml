@@ -19,17 +19,6 @@ preflight:
 
 
 outputs:
-
-  - name: 'Board image'
-    comment: "Make a nice image of the board"
-    type: pcbdraw
-    dir: 'fabrication/docs'
-    options:
-      show_components: 'all'
-      output: '%f-PCB.%x'
-      style:
-        board: '#023BA2'
-        copper: '#3666bf'
   
   - name: 'Print schematics'
     comment: "Print schematic (PDF)"
