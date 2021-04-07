@@ -1,0 +1,59 @@
+name: PCB_FabFiles
+
+on:
+  push:
+
+jobs:
+  once:
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create a release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: true
+  
+
+  build_kicad_fabrication_files:
+    name: Make PCB fabrication files
+    runs-on: ubuntu-20.04
+    needs: once
+    steps:
+      - uses: actions/checkout@v2
+      - uses: nerdyscout/kicad-exports@v2.3
+        with:
+          config: pcb/jlcpcb_fab_files.kibot.yaml
+          dir: 'pcb'
+          board: 'pcb/*.kicad_pcb'
+          schema: 'pcb/*.sch'
+      - uses: papeloto/action-zip@v1
+        name: Zip gerbers
+        with:
+          files: pcb/fabrication/gerbers
+          dest: gerbers.zip
+      - name: Replace gerber dir with zipfile
+        run: |
+          sudo rm -r pcb/fabrication/gerbers
+          sudo mv gerbers.zip pcb/fabrication/
+      - uses: papeloto/action-zip@v1
+        name: Make release package
+        with:
+          files: pcb/fabrication
+          dest: PCB_fabrication_files_for_jlcpcb.zip
+      - uses: actions/upload-release-asset@v1
+        name: Upload release assets   
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.once.outputs.upload_url }}
+          asset_path: PCB_fabrication_files_for_jlcpcb.zip
+          asset_name: PCB_fabrication_files_for_jlcpcb.zip
+          asset_content_type: application/octet-stream    
